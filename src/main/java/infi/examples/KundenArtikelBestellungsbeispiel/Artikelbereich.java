@@ -9,7 +9,7 @@ public class Artikelbereich {
                     CREATE TABLE IF NOT EXISTS ARTIKEL(
                         id INTEGER PRIMARY KEY AUTO_INCREMENT,
                         bezeichnung TEXT,
-                        preis INTEGER
+                        preis DECIMAL(10, 2)
                     )
                     """;
             stmt.execute(sql);

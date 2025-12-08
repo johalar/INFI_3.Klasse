@@ -80,7 +80,7 @@ public class Bestellbereich {
                     System.out.printf("Bestell-ID: %d | Kunden-ID: %d | Kunden-Name: %s | Artikel-ID: %d | Artikel-Bezeichnung: %s | Menge: %d%n",
                             id, kundenID, kundenName, artikelID, artikelBezeichnung, menge);
                 }
-                if (!found) System.out.println("Keine Bestellungen für diese KundenID gefunden.");
+                if (!found) System.err.println("Keine Bestellungen für diese KundenID gefunden.");
 
             }
         } catch (SQLException e) {

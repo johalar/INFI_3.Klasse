@@ -18,7 +18,7 @@ public class SQLiteJDBC {
             return; // Programm beenden, wenn Treiber fehlt
         }
 
-        try (Connection c = DriverManager.getConnection(DB_URL);) {
+        try (Connection c = DriverManager.getConnection(DB_URL)) {
             System.out.println("Datenbank erfolgreich geöffnet");
 
             createTable(c);

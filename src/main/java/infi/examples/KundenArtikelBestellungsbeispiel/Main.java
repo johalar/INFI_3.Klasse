@@ -6,11 +6,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Main {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/kundenartikelbestellungen?user=root&useSSL=false&serverTimezone=UTC";
-
     public static void main(String[] args) {
-        try (Scanner input = new Scanner(System.in); Connection c = DriverManager.getConnection(DB_URL)) {
-//            initializeDatabase(c);
+        try (Scanner input = new Scanner(System.in); Connection c = DriverManager.getConnection(DatabaseConfig.getDbUrl())) {
+            initializeDatabase(c);
             boolean schleife = true;
             while (schleife) {
                 ausgabe();
@@ -26,7 +24,7 @@ public class Main {
                         System.out.print("Namen des Artikels: ");
                         String artikelName = input.next();
                         System.out.print("Preis des Artikels (Cent): ");
-                        int preis = input.nextInt();
+                        double preis = input.nextDouble();
                         Artikelbereich.insertIntoArtikel(c, artikelName, preis);
                         break;
                     case 3:
@@ -56,7 +54,7 @@ public class Main {
                         schleife = false;
                         break;
                     default:
-                        System.err.println("Falsche Eingabe nur zahlen von 1-7!!");
+                        System.err.println("Falsche Eingabe nur zahlen von 1-8!!");
                 }
             }
         } catch (SQLException e) {

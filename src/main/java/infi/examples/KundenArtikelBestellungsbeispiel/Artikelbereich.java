@@ -14,7 +14,7 @@ public class Artikelbereich {
                     """;
             stmt.execute(sql);
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim erstellen der Artikel-Tabelle" + e.getMessage(), e);
+            throw new DataAccessException("Fehler beim erstellen der Artikel-Tabelle", e);
         }
     }
 
@@ -25,7 +25,7 @@ public class Artikelbereich {
             pstmt.setDouble(2, preis);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim einfügen der Artikeldaten" + e.getMessage(), e);
+            throw new DataAccessException("Fehler beim einfügen der Artikeldaten", e);
         }
     }
 
@@ -44,7 +44,7 @@ public class Artikelbereich {
             }
             if (!found) System.err.println("Keine Artikel in der Datenbank gefunden.");
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Abrufen der Artikeldaten: " + e.getMessage(), e);
+            throw new DataAccessException("Fehler beim Abrufen der Artikeldaten: ", e);
         }
     }
 }

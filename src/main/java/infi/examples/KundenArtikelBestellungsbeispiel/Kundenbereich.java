@@ -14,7 +14,7 @@ public class Kundenbereich {
                     """;
             stmt.execute(sql);
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim erstellen der Kunden-Tabelle" + e.getMessage(), e);
+            throw new DataAccessException("Fehler beim erstellen der Kunden-Tabelle", e);
         }
     }
 
@@ -25,7 +25,7 @@ public class Kundenbereich {
             pstmt.setString(2, email);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim einfügen der Kundendaten" + e.getMessage(), e);
+            throw new DataAccessException("Fehler beim einfügen der Kundendaten", e);
         }
     }
 
@@ -44,7 +44,7 @@ public class Kundenbereich {
             if (!found) System.err.println("Keine Kunden in der Datenbank gefunden.");
 
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Abrufen der Kundendaten" + e.getMessage(), e);
+            throw new DataAccessException("Fehler beim Abrufen der Kundendaten", e);
         }
     }
 

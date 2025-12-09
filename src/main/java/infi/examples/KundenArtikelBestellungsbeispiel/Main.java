@@ -58,7 +58,7 @@ public class Main {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataAccessException(e);
         }
     }
 
@@ -70,7 +70,7 @@ public class Main {
             insertTestData(c);
 
         } catch (SQLException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new DataAccessException("Datenbank-Initialisierung fehlgeschlagen.", e);
         }
     }
 

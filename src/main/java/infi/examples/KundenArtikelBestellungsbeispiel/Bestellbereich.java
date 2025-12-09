@@ -23,7 +23,7 @@ public class Bestellbereich {
                     """;
             stmt.execute(sql);
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim erstellen der Bestellungen-Tabelle" + e.getMessage(), e);
+            throw new DataAccessException("Fehler beim erstellen der Bestellungen-Tabelle", e);
         }
     }
 
@@ -35,7 +35,7 @@ public class Bestellbereich {
             pstmt.setInt(3, anzahl);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim einfügen der Bestelldaten" + e.getMessage(), e);
+            throw new DataAccessException("Fehler beim einfügen der Bestelldaten", e);
         }
     }
 
@@ -53,7 +53,7 @@ public class Bestellbereich {
             }
             if (!found) System.err.println("Keine Bestellungen in der Datenbank gefunden.");
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Abrufen der Bestelldaten" + e.getMessage(), e);
+            throw new DataAccessException("Fehler beim Abrufen der Bestelldaten", e);
         }
     }
 
@@ -84,7 +84,7 @@ public class Bestellbereich {
 
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Fehler beim Abrufen der Bestellungen des Kunden mit der ID: " + kundenID + e.getMessage(), e);
+            throw new DataAccessException("Fehler beim Abrufen der Bestellungen des Kunden mit der ID: " + kundenID, e);
         }
     }
 

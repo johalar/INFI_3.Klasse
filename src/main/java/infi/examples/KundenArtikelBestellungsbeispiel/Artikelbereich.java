@@ -3,7 +3,7 @@ package infi.examples.KundenArtikelBestellungsbeispiel;
 import java.sql.*;
 
 public class Artikelbereich {
-    public static void createArtikel(Connection c) throws SQLException {
+    public static void create(Connection c) throws SQLException {
         try (Statement stmt = c.createStatement()) {
             String sql = """
                     CREATE TABLE IF NOT EXISTS ARTIKEL(
@@ -18,7 +18,7 @@ public class Artikelbereich {
         }
     }
 
-    public static void insertIntoArtikel(Connection c, String bezeichnung, double preis) throws SQLException {
+    public static void insertData(Connection c, String bezeichnung, double preis) throws SQLException {
         String sql = "INSERT INTO ARTIKEL (bezeichnung, preis) VALUES (?, ?)";
         try (PreparedStatement pstmt = c.prepareStatement(sql)) {
             pstmt.setString(1, bezeichnung);
@@ -29,7 +29,7 @@ public class Artikelbereich {
         }
     }
 
-    public static void selectArtikel(Connection c) throws SQLException {
+    public static void select(Connection c) throws SQLException {
         String sql = "SELECT id, bezeichnung, preis FROM ARTIKEL";
         try (Statement stmt = c.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             boolean found = false;
@@ -44,7 +44,28 @@ public class Artikelbereich {
             }
             if (!found) System.err.println("Keine Artikel in der Datenbank gefunden.");
         } catch (SQLException e) {
-            throw new DataAccessException("Fehler beim Abrufen der Artikeldaten: ", e);
+            throw new DataAccessException("Fehler beim Abrufen der Artikeldaten", e);
+        }
+    }
+
+    public static void update(Connection c, String bezeichnung, double preis, int id) throws SQLException {
+        String sql = "UPDATE FROM ARTIKEL SET bezeichnung = ?, preis = ? WHERE id = ?";
+        try (PreparedStatement pstmt = c.prepareStatement(sql)) {
+            pstmt.setString(1, bezeichnung);
+            pstmt.setDouble(2, preis);
+            pstmt.setInt(3, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Fehler beim Daten aktualisieren der Artikeldaten", e);
+        }
+    }
+
+    public static void delete(Connection c, int artikelID) throws SQLException {
+        try  (PreparedStatement pstmt = c.prepareStatement("DELETE FROM ARTIKEL WHERE id = ?")) {
+            pstmt.setInt(1, artikelID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Fehler beim löschen eines Artikel",e);
         }
     }
 }

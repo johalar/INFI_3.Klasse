@@ -3,7 +3,7 @@ package infi.examples.KundenArtikelBestellungsbeispiel;
 import java.sql.*;
 
 public class Bestellbereich {
-    public static void createBestellungen(Connection c) throws SQLException {
+    public static void create(Connection c) throws SQLException {
         try (Statement stmt = c.createStatement()) {
             String sql = """
                     CREATE TABLE IF NOT EXISTS BESTELLUNGEN(
@@ -27,7 +27,7 @@ public class Bestellbereich {
         }
     }
 
-    public static void insertIntoBestellungen(Connection c, int kundenID, int artikelID, int anzahl) throws SQLException {
+    public static void insertData(Connection c, int kundenID, int artikelID, int anzahl) throws SQLException {
         String sql = "INSERT INTO BESTELLUNGEN (kundenID, artikelID, anzahl) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = c.prepareStatement(sql)) {
             pstmt.setInt(1, kundenID);
@@ -39,7 +39,7 @@ public class Bestellbereich {
         }
     }
 
-    public static void selectBestellungen(Connection c) throws SQLException {
+    public static void select(Connection c) throws SQLException {
         String sql = "SELECT * FROM BESTELLUNGEN";
         try (Statement stmt = c.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             boolean found = false;
@@ -88,4 +88,25 @@ public class Bestellbereich {
         }
     }
 
+    public static void update(Connection c, int kundenID, int artikelID, int anzahl, int id) throws SQLException {
+        String sql = "UPDATE FROM KUNDEN SET name = ?, email = ? WHERE id = ?";
+        try (PreparedStatement pstmt = c.prepareStatement(sql)) {
+            pstmt.setInt(1, kundenID);
+            pstmt.setInt(2, artikelID);
+            pstmt.setInt(3, anzahl);
+            pstmt.setInt(4, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Fehler beim aktualisieren der Bestellungsdaten", e);
+        }
+    }
+
+    public static void delete(Connection c, int id) throws SQLException {
+        try (PreparedStatement pstmt = c.prepareStatement("DELETE FROM BESTELLUNGEN WHERE id = ?")) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Fehler beim löschen einer Bestellung", e);
+        }
+    }
 }

@@ -4,10 +4,11 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class SQLiteRandomStats {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/randomNumberers?user=root&useSSL=false&serverTimezone=UTC";
+    static DatabaseConfig config = new DatabaseConfig("database.properties");
+    static String jdbcUrl = config.getDbUrl();
 
     public static void main(String[] args) {
-        try (Connection c = DriverManager.getConnection(DB_URL);
+        try (Connection c = DriverManager.getConnection(jdbcUrl);
              Scanner sc = new Scanner(System.in)) {
 
             System.out.print("Enter the number of random values to generate: ");
@@ -43,12 +44,12 @@ public class SQLiteRandomStats {
     public static void createRandomNumbersTable(Connection c) throws SQLException {
         try (Statement stmt = c.createStatement()) {
             String sql = """
-                CREATE TABLE IF NOT EXISTS RANDOM_NUMBERS (
-                    ID INTEGER PRIMARY KEY AUTO_INCREMENT,
-                    VALUE INTEGER NOT NULL,
-                    IS_ODD INTEGER NOT NULL
-                )
-            """;
+                        CREATE TABLE IF NOT EXISTS RANDOM_NUMBERS (
+                            ID INTEGER PRIMARY KEY AUTO_INCREMENT,
+                            VALUE INTEGER NOT NULL,
+                            IS_ODD INTEGER NOT NULL
+                        )
+                    """;
             stmt.executeUpdate(sql);
         } catch (SQLException e) {
             throw new SQLException("Failed to create table", e);

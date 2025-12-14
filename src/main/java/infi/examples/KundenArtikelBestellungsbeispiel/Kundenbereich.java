@@ -3,7 +3,7 @@ package infi.examples.KundenArtikelBestellungsbeispiel;
 import java.sql.*;
 
 public class Kundenbereich {
-    public static void createKunden(Connection c) throws SQLException {
+    public static void create(Connection c) throws SQLException {
         try (Statement stmt = c.createStatement()) {
             String sql = """
                     CREATE TABLE IF NOT EXISTS KUNDEN(
@@ -18,7 +18,7 @@ public class Kundenbereich {
         }
     }
 
-    public static void insertIntoKunden(Connection c, String name, String email) throws SQLException {
+    public static void insertData(Connection c, String name, String email) throws SQLException {
         String sql = "INSERT INTO KUNDEN (name, email) VALUES (?, ?)";
         try (PreparedStatement pstmt = c.prepareStatement(sql)) {
             pstmt.setString(1, name);
@@ -29,7 +29,7 @@ public class Kundenbereich {
         }
     }
 
-    public static void selectKunden(Connection c) {
+    public static void select(Connection c) throws SQLException {
         String sql = "SELECT id, name, email FROM KUNDEN";
         try (Statement stmt = c.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             boolean found = false;
@@ -48,4 +48,24 @@ public class Kundenbereich {
         }
     }
 
+    public static void update(Connection c, String name, String email, int id) throws SQLException {
+        String sql = "UPDATE FROM KUNDEN SET name = ?, email = ? WHERE id = ?";
+        try (PreparedStatement pstmt = c.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, email);
+            pstmt.setInt(3, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Fehler beim aktualisieren der Kundendaten", e);
+        }
+    }
+
+    public static void delete(Connection c, int id) throws SQLException {
+        try (PreparedStatement pstmt = c.prepareStatement("DELETE FROM KUNDEN WHERE id = ?")) {
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataAccessException("Fehler beim löschen eines Kunden", e);
+        }
+    }
 }

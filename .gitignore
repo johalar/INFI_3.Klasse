@@ -22,9 +22,15 @@ Thumbs.db
 ### Logs ###
 *.log
 
-### Databases ###
+### Databases & Secrets ###
+# Ignoriert lokale Datenbank-Dateien
 *.db
 *.sqlite
+
+# Ignoriert die Konfigurationsdatei mit den echten Anmeldedaten
+database.properties
+databaseKAB.properties
+*.env
 
 ### Executables ###
 *.exe

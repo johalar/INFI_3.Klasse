@@ -13,13 +13,13 @@ public class Main {
     public static void main(String[] args) {
         try (Connection c = DriverManager.getConnection(jdbcUrl)) {
             //initializeDatabase(c);
-            anwendungsAnzeige(c);
+            anwendungsLogik(c);
         } catch (SQLException e) {
             throw new DataAccessException(e);
         }
     }
 
-    public static void anwendungsAnzeige(Connection c) throws SQLException {
+    public static void anwendungsLogik(Connection c) throws SQLException {
         try (Scanner input = new Scanner(System.in);) {
             boolean schleife = true;
             while (schleife) {

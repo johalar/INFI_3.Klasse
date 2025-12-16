@@ -1,0 +1,33 @@
+# -------------------------------------------------------------------------
+# DATENBANK-KONFIGURATION TEMPLATE
+#
+# WICHTIG:
+# Kopieren Sie diese Datei nach "database.properties" und tragen Sie Ihre
+# LOKALEN Anmeldedaten ein. Die Datei "database.properties" wird von Git
+# ignoriert (.gitignore), um Geheimnisse zu schützen.
+# -------------------------------------------------------------------------
+
+# Hostname oder IP-Adresse des Datenbankservers (z.B. localhost oder 127.0.0.1)
+db.host=[DB_HOST_ADRESSE_HIER]
+
+# Datenbank-Port (Standard für MySQL ist 3306)
+db.port=3306
+
+# Name der Datenbank, die verwendet werden soll
+db.name=[DATENBANK_NAME_HIER]
+
+# Benutzername für die Datenbank-Verbindung
+db.user=[DB_BENUTZERNAME_HIER]
+
+# Passwort für den Datenbank-Benutzer
+db.password=[DB_PASSWORT_HIER]
+
+# Soll SSL/TLS für die Verbindung verwendet werden? (False für lokale Entwicklung üblich)
+db.useSSL=false
+
+# Zeitzone, die der Server verwendet (Wichtig für korrekte Zeitstempel)
+db.serverTimezone=UTC
+
+# Ermöglicht dem Client, öffentliche Schlüssel vom Server abzurufen.
+# Kann für moderne MySQL-Versionen notwendig sein.
+db.allowPublicKeyRetrieval=true

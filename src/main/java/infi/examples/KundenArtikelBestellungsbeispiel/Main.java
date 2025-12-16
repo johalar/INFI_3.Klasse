@@ -112,6 +112,10 @@ public class Main {
                         Bestellbereich.delete(c, bestellungsID1);
                         break;
                     case 14:
+                        Artikelbereich.selectKritischenBestand(c);
+                    case 15:
+                        Kundenbereich.select(c);
+                    case 16:
                         schleife = false;
                         break;
                     default:
@@ -223,7 +227,9 @@ public class Main {
         System.out.println("(11) Kunde löschen");
         System.out.println("(12) Artikel löschen");
         System.out.println("(13) Bestellung löschen");
-        System.out.println("(14) Beenden");
+        System.out.println("(14) Artikel mit kritischen Lagerbestand anzeigen");
+        System.out.println("(15) Kunde mit der teuersten Bestellung");
+        System.out.println("(16) Beenden");
         System.out.print("Geben sie eine Zahl ein: ");
     }
 }

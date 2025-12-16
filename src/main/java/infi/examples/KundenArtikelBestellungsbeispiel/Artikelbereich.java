@@ -65,11 +65,38 @@ public class Artikelbereich {
     }
 
     public static void delete(Connection c, int artikelID) throws SQLException {
-        try  (PreparedStatement pstmt = c.prepareStatement("DELETE FROM ARTIKEL WHERE id = ?")) {
+        try (PreparedStatement pstmt = c.prepareStatement("DELETE FROM ARTIKEL WHERE id = ?")) {
             pstmt.setInt(1, artikelID);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            throw new DataAccessException("Fehler beim löschen eines Artikel",e);
+            throw new DataAccessException("Fehler beim löschen eines Artikel", e);
+        }
+    }
+
+    public static void selectKritischenBestand(Connection c) throws SQLException {
+        String sql = """
+                SELECT
+                    bezeichnung,
+                    lagerbestand
+                FROM
+                    ARTIKEL
+                WHERE
+                    lagerbestand < 5
+                ORDER BY
+                    lagerbestand ASC;
+                """;
+        try (ResultSet rs = c.createStatement().executeQuery(sql)) {
+            boolean found = false;
+            while (rs.next()) {
+                found = true;
+                String bezeichnung = rs.getString("bezeichnung");
+                int lagerbestand = rs.getInt("lagerbestand");
+
+                System.out.printf("Bezeichnung: %s |  Lagerbestand: %d%n", bezeichnung, lagerbestand);
+            }
+            if (!found) System.err.println("Keine Artikel in der Datenbank gefunden.");
+        } catch (SQLException e) {
+            throw new DataAccessException("Fehler beim Abrufen der Artikel mit kritischen Lagerbestand", e);
         }
     }
 }

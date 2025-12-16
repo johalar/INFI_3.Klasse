@@ -68,4 +68,35 @@ public class Kundenbereich {
             throw new DataAccessException("Fehler beim löschen eines Kunden", e);
         }
     }
+    
+    public static void selectBestenKunden(Connection c) throws SQLException {
+        String sql = """
+                SELECT
+                    K.name AS Kundenname,
+                    SUM(B.anzahl * A.preis) AS Gesamtausgaben
+                FROM
+                    KUNDEN K
+                JOIN
+                    BESTELLUNGEN B ON K.id = B.kundenID
+                JOIN
+                    ARTIKEL A ON B.artikelID = A.id
+                GROUP BY
+                    K.id, K.name
+                ORDER BY
+                    Gesamtausgaben DESC
+                LIMIT 10;
+                """;
+        try (ResultSet rs = c.createStatement().executeQuery(sql)) {
+            boolean found = false;
+            while (rs.next()) {
+                found = true;
+                String name = rs.getString("Kundenname");
+                int gesamtausgaben = rs.getInt("Gesamtausgaben");
+
+                System.out.printf("Kundenname: %s | Gesamtausgaben: %d%n", name, gesamtausgaben);
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException("Fehler beim Abrufen des Kunden mit der teuersten Bestellung",e);
+        }
+    }
 }

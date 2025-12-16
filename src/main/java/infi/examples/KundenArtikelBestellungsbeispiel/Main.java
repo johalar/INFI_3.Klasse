@@ -8,11 +8,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Main {
-    static DatabaseConfig config = new DatabaseConfig("databaseKAB.properties");
-    static String jdbcUrl = config.getDbUrl();
+    private static final DatabaseConfig CONFIG = new DatabaseConfig("databaseKAB.properties");
+    private static final String JDBC_URL = CONFIG.getDbUrl();
+
     public static void main(String[] args) {
-        try (Connection c = DriverManager.getConnection(jdbcUrl)) {
-            //initializeDatabase(c);
+        try (Connection c = DriverManager.getConnection(JDBC_URL)) {
+            initializeDatabase(c);
             anwendungsLogik(c);
         } catch (SQLException e) {
             throw new DataAccessException(e);
@@ -20,7 +21,7 @@ public class Main {
     }
 
     public static void anwendungsLogik(Connection c) throws SQLException {
-        try (Scanner input = new Scanner(System.in);) {
+        try (Scanner input = new Scanner(System.in)) {
             boolean schleife = true;
             while (schleife) {
                 ausgabe();
@@ -37,7 +38,9 @@ public class Main {
                         String artikelName = input.next();
                         System.out.print("Preis des Artikels (Cent): ");
                         double preis = input.nextDouble();
-                        Artikelbereich.insertData(c, artikelName, preis);
+                        System.out.print("Initialer Lagerbestand: ");
+                        int lagerbestand = input.nextInt();
+                        Artikelbereich.insertData(c, artikelName, preis, lagerbestand);
                         break;
                     case 3:
                         System.out.print("KundenID: ");
@@ -78,7 +81,9 @@ public class Main {
                         String neueBezeichnung = input.next();
                         System.out.print("Neuer Preis: ");
                         int neuerPreis = input.nextInt();
-                        Artikelbereich.update(c, neueBezeichnung, neuerPreis, artikelID1);
+                        System.out.print("Neuer Lagerbestand: ");
+                        int neuerLagerbestand = input.nextInt();
+                        Artikelbereich.update(c, neueBezeichnung, neuerPreis, neuerLagerbestand, artikelID1);
                         break;
                     case 10:
                         System.out.print("ID der Bestellung: ");
@@ -110,7 +115,7 @@ public class Main {
                         schleife = false;
                         break;
                     default:
-                        System.err.println("Falsche Eingabe nur zahlen von 1-8!!");
+                        System.err.println("Falsche Eingabe nur zahlen von 1-14!!");
                 }
             }
         }
@@ -152,49 +157,55 @@ public class Main {
         Kundenbereich.insertData(c, "Tina Volkmann", "tina.v@web.at");
 
         // --- 20 Neue Artikel (Startet voraussichtlich bei ID 1) ---
-        Artikelbereich.insertData(c, "Drahtlose Ladestation", 39.99);
-        Artikelbereich.insertData(c, "4K Action-Kamera", 199.50);
-        Artikelbereich.insertData(c, "Bluetooth-Lautsprecher", 79.00);
-        Artikelbereich.insertData(c, "E-Book-Reader", 119.99);
-        Artikelbereich.insertData(c, "Tragbarer Beamer", 450.00);
-        Artikelbereich.insertData(c, "Gaming-Stuhl (Leder)", 289.00);
-        Artikelbereich.insertData(c, "Smart-Home Thermostat", 125.50);
-        Artikelbereich.insertData(c, "Robotersauger", 350.00);
-        Artikelbereich.insertData(c, "Mesh WLAN System", 189.99);
-        Artikelbereich.insertData(c, "Tablet 10 Zoll", 420.00);
-        Artikelbereich.insertData(c, "Grafiktablett", 89.90);
-        Artikelbereich.insertData(c, "Drohne mit Kamera", 599.00);
-        Artikelbereich.insertData(c, "Netzteil 650W", 79.50);
-        Artikelbereich.insertData(c, "HDMI Kabel 2m", 15.99);
-        Artikelbereich.insertData(c, "Software: Virenschutz", 49.00);
-        Artikelbereich.insertData(c, "Gaming Headset", 95.00);
-        Artikelbereich.insertData(c, "Kaffee-Maschine (Kapsel)", 69.90);
-        Artikelbereich.insertData(c, "Externe SSD 1TB", 149.99);
-        Artikelbereich.insertData(c, "Temperatursensor Smart", 25.00);
-        Artikelbereich.insertData(c, "Powerbank 20000mAh", 35.50);
-
+        Artikelbereich.insertData(c, "Drahtlose Ladestation", 39.99, 10);
+        Artikelbereich.insertData(c, "4K Action-Kamera", 199.50, 5);
+        Artikelbereich.insertData(c, "Bluetooth-Lautsprecher", 79.00, 10);
+        Artikelbereich.insertData(c, "E-Book-Reader", 119.99, 15);
+        Artikelbereich.insertData(c, "Tragbarer Beamer", 450.00, 3);
+        Artikelbereich.insertData(c, "Gaming-Stuhl (Leder)", 289.00, 8);
+        Artikelbereich.insertData(c, "Smart-Home Thermostat", 125.50, 20);
+        Artikelbereich.insertData(c, "Robotersauger", 350.00, 5);
+        Artikelbereich.insertData(c, "Mesh WLAN System", 189.99, 10);
+        Artikelbereich.insertData(c, "Tablet 10 Zoll", 420.00, 12);
+        Artikelbereich.insertData(c, "Grafiktablett", 89.90, 10);
+        Artikelbereich.insertData(c, "Drohne mit Kamera", 599.00, 4);
+        Artikelbereich.insertData(c, "Netzteil 650W", 79.50, 10);
+        Artikelbereich.insertData(c, "HDMI Kabel 2m", 15.99, 50);
+        Artikelbereich.insertData(c, "Software: Virenschutz", 49.00, 100);
+        Artikelbereich.insertData(c, "Gaming Headset", 95.00, 10);
+        Artikelbereich.insertData(c, "Kaffee-Maschine (Kapsel)", 69.90, 7);
+        Artikelbereich.insertData(c, "Externe SSD 1TB", 149.99, 10);
+        Artikelbereich.insertData(c, "Temperatursensor Smart", 25.00, 25);
+        Artikelbereich.insertData(c, "Powerbank 20000mAh", 35.50, 30);
         // --- 20 neue Bestellungen (Kundennummern 1 bis 20, Artikelnummern 1 bis 20) ---
         // diverse Bestellungen, um alle Kunden und Artikel abzudecken
-        Bestellbereich.insertData(c, 1, 4, 1);    // Anja kauft E-Book-Reader
-        Bestellbereich.insertData(c, 2, 1, 2);    // Bernd kauft 2 Ladestationen
-        Bestellbereich.insertData(c, 3, 10, 1);   // Clara kauft Tablet
-        Bestellbereich.insertData(c, 4, 20, 3);   // David kauft 3 Powerbanks
-        Bestellbereich.insertData(c, 5, 17, 1);   // Eva kauft Kaffeemaschine
-        Bestellbereich.insertData(c, 6, 6, 1);    // Franz kauft Gaming-Stuhl
-        Bestellbereich.insertData(c, 7, 14, 5);   // Gabi kauft 5 HDMI Kabel
-        Bestellbereich.insertData(c, 8, 8, 1);    // Hans kauft Robotersauger
-        Bestellbereich.insertData(c, 9, 3, 2);    // Ina kauft 2 Bluetooth-Lautsprecher
-        Bestellbereich.insertData(c, 10, 15, 1);  // Jens kauft Virenschutz
-        Bestellbereich.insertData(c, 11, 12, 1);  // Katrin kauft Drohne
-        Bestellbereich.insertData(c, 12, 11, 1);  // Lukas kauft Grafiktablett
-        Bestellbereich.insertData(c, 13, 18, 1);  // Maria kauft Externe SSD
-        Bestellbereich.insertData(c, 14, 5, 1);   // Nico kauft Beamer
-        Bestellbereich.insertData(c, 15, 9, 1);   // Olga kauft Mesh WLAN
-        Bestellbereich.insertData(c, 16, 13, 1);  // Peter kauft Netzteil
-        Bestellbereich.insertData(c, 17, 7, 2);   // Quinn kauft 2 Thermostate
-        Bestellbereich.insertData(c, 18, 16, 1);  // Rieke kauft Gaming Headset
-        Bestellbereich.insertData(c, 19, 2, 1);   // Stefan kauft Action-Kamera
-        Bestellbereich.insertData(c, 20, 19, 4);  // Tina kauft 4 Sensoren
+        Bestellbereich.insertData(c, 1, 4, 1);    // Anja: E-Book-Reader (15 -> 14)
+        Bestellbereich.insertData(c, 2, 1, 2);    // Bernd: 2 Ladestationen (10 -> 8)
+        Bestellbereich.insertData(c, 3, 10, 1);   // Clara: Tablet (12 -> 11)
+        Bestellbereich.insertData(c, 4, 20, 3);   // David: 3 Powerbanks (30 -> 27)
+        Bestellbereich.insertData(c, 5, 17, 1);   // Eva: Kaffeemaschine (7 -> 6)
+        Bestellbereich.insertData(c, 6, 6, 1);    // Franz: Gaming-Stuhl (8 -> 7)
+        Bestellbereich.insertData(c, 7, 14, 5);   // Gabi: 5 HDMI Kabel (50 -> 45)
+        Bestellbereich.insertData(c, 8, 8, 1);    // Hans: Robotersauger (5 -> 4)
+        Bestellbereich.insertData(c, 9, 3, 2);    // Ina: 2 Bluetooth-Lautsprecher (10 -> 8)
+        Bestellbereich.insertData(c, 10, 15, 1);  // Jens: Virenschutz (100 -> 99)
+        Bestellbereich.insertData(c, 11, 12, 1);  // Katrin: Drohne (4 -> 3)
+        Bestellbereich.insertData(c, 12, 11, 1);  // Lukas: Grafiktablett (10 -> 9)
+        Bestellbereich.insertData(c, 13, 18, 1);  // Maria: Externe SSD (10 -> 9)
+        Bestellbereich.insertData(c, 14, 5, 1);   // Nico: Beamer (3 -> 2)
+        Bestellbereich.insertData(c, 15, 9, 1);   // Olga: Mesh WLAN (10 -> 9)
+        Bestellbereich.insertData(c, 16, 13, 1);  // Peter: Netzteil (10 -> 9)
+        Bestellbereich.insertData(c, 17, 7, 2);   // Quinn: 2 Thermostate (20 -> 18)
+        Bestellbereich.insertData(c, 18, 16, 1);  // Rieke: Gaming Headset (10 -> 9)
+        Bestellbereich.insertData(c, 19, 2, 1);   // Stefan: Action-Kamera (5 -> 4)
+        Bestellbereich.insertData(c, 20, 19, 4);  // Tina: 4 Sensoren (25 -> 21)
+        //
+        //        // --- NEUER TESTFALL: Bestand auf Null reduzieren ---
+        //        // Beamer ID 5: Aktueller Bestand 2. Bestellung 2 -> Bestand 0.
+        Bestellbereich.insertData(c, 1, 5, 2);    // Anja kauft 2 Beamer (2 -> 0). Wichtig: Prüft die Bestandsgrenze.
+        // HINWEIS: Eine Bestellung, die den Bestand überzieht (z.B. Bestellbereich.insertData(c, 2, 5, 1);),
+        // wird hier nicht eingefügt, da sie eine Ausnahme werfen und die gesamte Initialisierung stoppen würde.
+        // Diesen Testfall müssen Sie manuell über Menüpunkt (3) ausführen.
     }
 
     public static void ausgabe() {
